@@ -1,0 +1,38 @@
+# Загрузить стандартную библиотеку Python и библиотеку DesignScript
+import clr
+
+clr.AddReference("RevitNodes")
+import Revit
+clr.ImportExtensions(Revit.Elements)
+
+clr.AddReference("RevitServices")
+from RevitServices.Persistence import DocumentManager
+from RevitServices.Transactions import TransactionManager
+
+import RevitServices
+clr.AddReference('RevitAPI')
+from Autodesk.Revit.DB import *
+import Autodesk
+
+import System
+
+doc = DocumentManager.Instance.CurrentDBDocument
+# Разместите код под этой строкой
+start_number = IN[0]
+sheet_name = IN[1]
+sheet_type = UnwrapElement(IN[2])
+sheet_list = list()
+chapter = "АР"
+
+TransactionManager.Instance.EnsureInTransaction(doc)
+
+for number in range(len(start_number)):
+	new_sheet = ViewSheet.Create(doc, sheet_type.Id)
+	new_sheet.Name = sheet_name
+	new_sheet.SheetNumber = start_number[number]
+	new_sheet.LookupParameter("_Раздел").Set(chapter)
+	sheet_list.append(new_sheet.ToDSType(False))
+	
+TransactionManager.Instance.TransactionTaskDone()
+# Назначьте вывод переменной OUT.
+OUT = sheet_list
