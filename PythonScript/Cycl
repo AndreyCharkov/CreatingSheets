@@ -1,0 +1,17 @@
+# Загрузить стандартную библиотеку Python и библиотеку DesignScript
+import sys
+import clr
+clr.AddReference('ProtoGeometry')
+from Autodesk.DesignScript.Geometry import *
+
+# Введенные в этом узле данные сохраняется в виде списка в переменных IN.
+start_number = IN[0]
+finish_number = IN[1]
+number_list = []
+while start_number < finish_number:
+	number_list.append(start_number + 1)
+	start_number += 1
+number_list = list(map(str,number_list))
+OUT = number_list
+
+#Цикл который принимает начальный и конечный номер и создает последовательность из int чисел, затем с помощью функции map() натуральные числа переводятся в формат текста.
